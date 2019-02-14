@@ -3,6 +3,7 @@ layout: post
 title: SUCTF 2018 Write-up
 date: 2018-05-28 15:28:53.000000000 +08:00
 tags: writeup
+mathjax: true
 ---
 
 1. 还是先写最近的……否则真的容易忘
