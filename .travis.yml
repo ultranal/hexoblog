@@ -1,0 +1,24 @@
+# 使用语言
+language: node_js
+node_js: stable
+
+cache:
+  directories:
+    - node_modules
+# tarvis生命周期执行顺序详见官网文档
+before_install:
+- npm install -g hexo-cli
+install:
+- npm install
+- npm install hexo-deployer-git --save
+- npm install hexo-deployer-rsync --save
+- npm install hexo-renderer-pug --save 
+- npm install hexo-renderer-scss --save
+script:
+- hexo clean
+- hexo generate
+after_success:
+- git config --global user.name "ultranal"
+- git config --global user.email "ultranal@gmail.com"
+- sed -i "s/github_token/${GITHUB_TOKEN}/g" ./_config.yml
+- hexo deploy
