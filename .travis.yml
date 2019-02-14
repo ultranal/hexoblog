@@ -1,18 +1,24 @@
-# 使用语言
 language: node_js
 node_js: stable
 
+addons:
+  ssh_known_hosts: lpnal.top
+
 cache:
   directories:
-    - node_modules
-# tarvis生命周期执行顺序详见官网文档
+  - node_modules
 before_install:
+- openssl aes-256-cbc -K $encrypted_a1f3c55590e7_key -iv $encrypted_a1f3c55590e7_iv
+  -in id_rsa.enc -out /tmp/id_rsa -d
+- eval "$(ssh-agent -s)"
+- chmod 600 /tmp/id_rsa
+- ssh-add /tmp/id_rsa
 - npm install -g hexo-cli
 install:
 - npm install
 - npm install hexo-deployer-git --save
 - npm install hexo-deployer-rsync --save
-- npm install hexo-renderer-pug --save 
+- npm install hexo-renderer-pug --save
 - npm install hexo-renderer-scss --save
 script:
 - hexo clean
