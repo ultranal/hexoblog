@@ -80,7 +80,7 @@ theme: landscape
 deploy:
   -  type: rsync
      host: lpnal.top
-     user: lpnal
+     user: hexo 
      root: /var/www/hexo
   -  type: git
      repo: https://github_token@github.com/ultranal/ultranal.github.io.git 
