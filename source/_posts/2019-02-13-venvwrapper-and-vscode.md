@@ -11,11 +11,11 @@ tags:
 
 使用 Git 维护 Python 项目，常常需要使用 `.gitignore` 来忽略 virtualenv 虚拟环境。相比之下，使用 virtualenvwrapper 项目统一管理虚拟环境就方便的多。
 
-## virtualenvwrapper
+# virtualenvwrapper
 
 [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/index.html) 是用来集中管理 virtualenv 环境的解决方案。相比于原生 virtualenv，virtenvwrapper 将所有虚拟环境统一放置在 `~/.virtualenvs` 下，省去了每次找环境的麻烦；同时也避免了将 virtualenv 目录放置在项目目录下、不便管理的问题。
 
-### 安装
+## 安装
 
 使用 pip 安装 virtualenvwrapper 包：
 ```
@@ -33,7 +33,7 @@ source /usr/local/bin/virtualenvwrapper.sh
 export VIRTUALENVWRAPPER_PYTHON='/usr/local/bin/python3'
 ```
 
-### 使用
+## 使用
 
 使用 `mkvirtualenv` 新建一个虚拟环境：
 ```
