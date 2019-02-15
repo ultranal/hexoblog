@@ -66,7 +66,7 @@ sand.txt
 #### 同余方程组
 这段代码加上sand.txt给出来的解，实际上构成了下面的同余方程组：
 
-$$
+\\[
 \begin{aligned}
     n \equiv 222 \pmod{257}\\
     n \equiv 203 \pmod{263}\\
@@ -89,7 +89,7 @@ $$
     n \equiv 87 \pmod{367}\\
     n \equiv 4 \pmod{373}
 \end{aligned}
-$$
+\\]
 
 类似这样的方程组，在数论中称作一元线性**同余方程组**。
 
@@ -98,11 +98,11 @@ $$
 
 * 一元线性同余方程组
 
-$$
+\\[
 \begin{aligned}
 \(\mathbf{S}) : \quad \left\{ \begin{matrix} x \equiv a_1 \pmod {m_1} \\ x \equiv a_2 \pmod {m_2} \\ \vdots \qquad\qquad\qquad \\ x \equiv a_n \pmod {m_n} \end{matrix} \right.
 \end{aligned}
-$$
+\\]
 
 有解，当且仅当其所有模数\\(m_1, m_2, \ldots, m_n\\)互质（这里的S式符合这个条件）；
 
