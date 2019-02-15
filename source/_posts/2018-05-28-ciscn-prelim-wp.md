@@ -2,7 +2,10 @@
 layout: post
 title: CISCN 2018 初赛 Write-up
 date: 2018-05-28 15:25:24.000000000 +08:00
-tags: writeup
+categories:
+  - writeup
+tags: 
+  - ciscn
 ---
 
 多年不更新，趁有时间整理一下最近比赛的writeup.
