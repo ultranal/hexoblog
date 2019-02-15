@@ -9,7 +9,7 @@ tags:
   - vscode
 ---
 
-使用 Git 维护 Python 项目，常常需要使用 `.gitignore` 来忽略 virtualenv 虚拟环境。相比之下，使用 virtualenvwrapper 项目统一管理虚拟环境就方便的多。
+使用 Git 维护 Python 项目，常常需要使用 `.gitignore` 来忽略 virtualenv 虚拟环境。相比之下，使用 virtualenvwrapper 项目统一管理虚拟环境就方便的多。本文记录一下 virtualenvwrapper 的安装配置过程，以及如何配合 Visual Studio Code 使用 virtualenvwrapper。
 
 # virtualenvwrapper
 
