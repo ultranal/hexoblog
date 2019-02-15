@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: page
 title: 关于我
 date: 2019-02-15 15:40:15.108870750 +08:00
 ---
