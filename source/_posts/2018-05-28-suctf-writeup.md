@@ -19,43 +19,46 @@ mathjax: true
 #### 题目
 game.py
 
-    #!/usr/bin/env python
-    # -*- encoding: utf-8 -*-
+```python
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 
-    import flag
+import flag
 
-    flag = flag.flag
-    sands = int(flag[5:-1].encode("hex"), 16)
+flag = flag.flag
+sands = int(flag[5:-1].encode("hex"), 16)
 
-    holes = [257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373]
+holes = [257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373]
 
-    with open("sand.txt", "w") as f:
-        for i in range(len(holes)):
-            sand = sands % holes[i]
-            f.write(str(sand)+"\n")
+with open("sand.txt", "w") as f:
+    for i in range(len(holes)):
+        sand = sands % holes[i]
+        f.write(str(sand)+"\n")
+```
 
 sand.txt
-
-    222
-    203
-    33
-    135
-    203
-    62
-    227
-    82
-    239
-    82
-    11
-    220
-    74
-    92
-    8
-    308
-    195
-    165
-    87
-    4
+```
+222
+203
+33
+135
+203
+62
+227
+82
+239
+82
+11
+220
+74
+92
+8
+308
+195
+165
+87
+4
+```
 
 #### 同余方程组
 这段代码加上sand.txt给出来的解，实际上构成了下面的同余方程组：
@@ -92,8 +95,9 @@ $$
 
 * 一元线性同余方程组
 
-$$\begin{aligned}\
-(\mathbf{S}) : \quad \left\{ \begin{matrix} x \equiv a_1 \pmod {m_1} \\ x \equiv a_2 \pmod {m_2} \\ \vdots \qquad\qquad\qquad \\ x \equiv a_n \pmod {m_n} \end{matrix} \right.
+$$
+\begin{aligned}
+\(\mathbf{S}) : \quad \left\{ \begin{matrix} x \equiv a_1 \pmod {m_1} \\ x \equiv a_2 \pmod {m_2} \\ \vdots \qquad\qquad\qquad \\ x \equiv a_n \pmod {m_n} \end{matrix} \right.
 \end{aligned}
 $$
 
@@ -120,167 +124,181 @@ $$
 
 求模逆元使用[扩展欧几里得算法](https://zh.wikipedia.org/wiki/%E6%89%A9%E5%B1%95%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%97%E7%AE%97%E6%B3%95)（欧几里得算法就是辗转相除法）来实现。
 
-    #!/usr/bin/env python
-    # -*- encoding: utf-8 -*-
-    
-    def extended_eucild(a, b):
-        if b == 0:
-            return a, 1, 0
-        d, x, y = extended_eucild(b, a % b)
-        x, y = y, x - a / b * y
-        return d, x, y
+```python
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
+
+def extended_eucild(a, b):
+    if b == 0:
+        return a, 1, 0
+    d, x, y = extended_eucild(b, a % b)
+    x, y = y, x - a / b * y
+    return d, x, y
+```
 
 #### 解法
 说了这么多，本题的解法就是通过扩展欧几里得算法求解上文给定的一元线性同余方程组S：
 
-    #!/usr/bin/env python
-    # -*- encoding: utf-8 -*-
+```python
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 
-    a = [222, 203, 33, 135, 203, 62, 227, 82, 239, 82, 11, 220, 74, 92, 8, 308, 195, 165, 87, 4]
-    w = [257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373]
+a = [222, 203, 33, 135, 203, 62, 227, 82, 239, 82, 11, 220, 74, 92, 8, 308, 195, 165, 87, 4]
+w = [257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373]
 
-    def extended_eucild(a, b):
-        if b == 0:
-            return a, 1, 0
-        d, x, y = extended_eucild(b, a % b)
-        x, y = y, x - a / b * y
-        return d, x, y
+def extended_eucild(a, b):
+    if b == 0:
+        return a, 1, 0
+    d, x, y = extended_eucild(b, a % b)
+    x, y = y, x - a / b * y
+    return d, x, y
 
-    def crt(a, w):
-        ret = 0
-        n = 1
-        for i in w:
-            n *= i
-        for i in range(len(w)):
-            m = n / w[i]
-            d, x, y = extended_eucild(w[i], m)
-            ret = (ret + y * m * a[i] % n) % n
-        return ret
-        
-    if __name__ == "__main__":
-        print hex(crt(a, w))[2:-1].decode('hex')
+def crt(a, w):
+    ret = 0
+    n = 1
+    for i in w:
+        n *= i
+    for i in range(len(w)):
+        m = n / w[i]
+        d, x, y = extended_eucild(w[i], m)
+        ret = (ret + y * m * a[i] % n) % n
+    return ret
+    
+if __name__ == "__main__":
+    print hex(crt(a, w))[2:-1].decode('hex')
+```
+
+当然你也可以用 GNU MP 库来实现。
 
 > flag{This_is_the_CRT_xwg)}
 
+
+
 ### RSA good
 题目给定了N和e
-    
-    N = 342455709448748144126356744976385170973517744602059517490422045682543287960167955127769980654250125331171261846920903825693509591867402054748269545989173880386620770767057995165518626234085821335790902075953939551116777613078301529741199260825495593643848062203477826484698214686522001924292713782595019038086926834360866522789951283935502968545347160597915951673480253253216027297476774028106074570088497425654525031294571609018030761716007610673627163536370205798268831577480146622906265953470659107801115278898533958878045433701201601516984582294147038705649395688342773971893457527598221773710752744142729023770679
-    e = 65537
 
+```python
+N = 342455709448748144126356744976385170973517744602059517490422045682543287960167955127769980654250125331171261846920903825693509591867402054748269545989173880386620770767057995165518626234085821335790902075953939551116777613078301529741199260825495593643848062203477826484698214686522001924292713782595019038086926834360866522789951283935502968545347160597915951673480253253216027297476774028106074570088497425654525031294571609018030761716007610673627163536370205798268831577480146622906265953470659107801115278898533958878045433701201601516984582294147038705649395688342773971893457527598221773710752744142729023770679
+e = 65537
+```
 注意到，给定的N具有[已知的质因数分解](http://factordb.com/index.php?query=342455709448748144126356744976385170973517744602059517490422045682543287960167955127769980654250125331171261846920903825693509591867402054748269545989173880386620770767057995165518626234085821335790902075953939551116777613078301529741199260825495593643848062203477826484698214686522001924292713782595019038086926834360866522789951283935502968545347160597915951673480253253216027297476774028106074570088497425654525031294571609018030761716007610673627163536370205798268831577480146622906265953470659107801115278898533958878045433701201601516984582294147038705649395688342773971893457527598221773710752744142729023770679)：
 
-    3424557094...79<618> = 7 · 4892224420...97<617>
+>   3424557094...79<618> = 7 · 4892224420...97<617>
 
 则p = 7, q = 4892224420...97。计算可得r, d = 1170425334...09。
  
 利用[rsatool](https://github.com/ius/rsatool)创建PEM格式的私钥，通过openssl rsautil 解密给定密文：
 
+```bash
      $ python rsatool.py -f PEM -o key.pem -n 3424557094...79 -d 1170425334...09
      $ openssl rsautl -decrypt -in pp.txt -inkey key.pem -out ppp.dec -raw
+```
 
 得到flag:
 
 > SUCTF{Ju5t_hav3_fun_1n_R34_4Ga1N!}
 
 ### RSA
-    #!/usr/bin/env python
-    # -*- encoding: utf-8 -*-
 
-    from Crypto.Random import random
-    import binascii
-    import hashlib
+```python
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 
-    def invmod(a, n):
-        t = 0
-        new_t = 1
-        r = n
-        new_r = a
-        while new_r != 0:
-            q = r // new_r
-            (t, new_t) = (new_t, t - q * new_t)
-            (r, new_r) = (new_r, r - q * new_r)
-        if r > 1:
-            raise Exception('unexpected')
-        if t < 0:
-            t += n
-        return t
+from Crypto.Random import random
+import binascii
+import hashlib
 
-    smallPrimes = [2, 3, 5, 7, 11, 13, 17, 19]
+def invmod(a, n):
+    t = 0
+    new_t = 1
+    r = n
+    new_r = a
+    while new_r != 0:
+        q = r // new_r
+        (t, new_t) = (new_t, t - q * new_t)
+        (r, new_r) = (new_r, r - q * new_r)
+    if r > 1:
+        raise Exception('unexpected')
+    if t < 0:
+        t += n
+    return t
 
-    def primefactor(p):
-        for x in smallPrimes:
-            if p % x == 0:
-                return True
-        return False
+smallPrimes = [2, 3, 5, 7, 11, 13, 17, 19]
 
-    def isprime(p, n):
-        for i in range(n):
-            a = random.randint(1, p)
-            if pow(a, p - 1, p) != 1:
-                return False
-        return True
+def primefactor(p):
+    for x in smallPrimes:
+        if p % x == 0:
+            return True
+    return False
 
-    def getprime(bit):
-        while True:
-            p = random.randint(2**(bit - 1), 2**bit - 1)
-            if not primefactor(p) and isprime(p, 5):
-                return p
+def isprime(p, n):
+    for i in range(n):
+        a = random.randint(1, p)
+        if pow(a, p - 1, p) != 1:
+            return False
+    return True
 
-    def genKey(keybits):
-        e = 3
-        bit = (keybits + 1) // 2 + 1
+def getprime(bit):
+    while True:
+        p = random.randint(2**(bit - 1), 2**bit - 1)
+        if not primefactor(p) and isprime(p, 5):
+            return p
 
-        p = 7
-        while (p - 1) % e == 0:
-            p = getprime(bit)
+def genKey(keybits):
+    e = 3
+    bit = (keybits + 1) // 2 + 1
 
-        q = p
-        while q == p or (q - 1) % e == 0:
-            q = getprime(bit)
+    p = 7
+    while (p - 1) % e == 0:
+        p = getprime(bit)
 
-        n = p * q
-        et = (p - 1) * (q - 1)
-        d = invmod(e, et)
-        pub = (e, n)
-        priv = (d, n)
+    q = p
+    while q == p or (q - 1) % e == 0:
+        q = getprime(bit)
 
-        return (pub, priv)
+    n = p * q
+    et = (p - 1) * (q - 1)
+    d = invmod(e, et)
+    pub = (e, n)
+    priv = (d, n)
 
-
-
-    pub, priv = genKey(2048)
-    (e,n) = pub
-    (d,n) = priv
-    de_hash = set()
+    return (pub, priv)
 
 
 
-    def b2n(s):
-        return int.from_bytes(s, byteorder='big')
+pub, priv = genKey(2048)
+(e,n) = pub
+(d,n) = priv
+de_hash = set()
 
-    def n2b(k):
-        return k.to_bytes((k.bit_length() + 7) // 8, byteorder='big')
 
-    def decrypt(cipher):
-        md5 = hashlib.md5()
-        md5.update(cipher)
-        digest = md5.digest()
-        if digest in de_hash:
-            raise ValueError('Already decrypted')
-        de_hash.add(digest)
-        return n2b(pow(b2n(cipher), d, n))
 
-    if __name__ == '__main__':
-        plain = 
-        cipher = n2b(pow(b2n(plain), e, n))
-        r = random.randint(2, n - 1)
-        c = b2n(cipher)
-        c2 = (pow(r, e, n) * c) % n
-        print (e)
-        print (d)
-        print (c2,r,n)
-    
+def b2n(s):
+    return int.from_bytes(s, byteorder='big')
+
+def n2b(k):
+    return k.to_bytes((k.bit_length() + 7) // 8, byteorder='big')
+
+def decrypt(cipher):
+    md5 = hashlib.md5()
+    md5.update(cipher)
+    digest = md5.digest()
+    if digest in de_hash:
+        raise ValueError('Already decrypted')
+    de_hash.add(digest)
+    return n2b(pow(b2n(cipher), d, n))
+
+if __name__ == '__main__':
+    plain = 
+    cipher = n2b(pow(b2n(plain), e, n))
+    r = random.randint(2, n - 1)
+    c = b2n(cipher)
+    c2 = (pow(r, e, n) * c) % n
+    print (e)
+    print (d)
+    print (c2,r,n)
+```
+
 解读代码，可以看见生成了随机值r,将r和flag分别加密后密文值相乘为c2。给定d, e, c2, r, N，求解flag。
 
 换言之：
@@ -304,76 +322,80 @@ flag*r的值可以通过openssl rsautil解密获得。
 
 问题即转化为求r对N的模逆元。注意，由于N, r较大，这里的扩展欧几里得算法需要用递推实现：
 
-    #!/usr/bin/env python
-    # -*- encoding: utf-8 -*-
+```python
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 
-    rmuln = 59115915707374791858043439923167683347161887030487325917423499796492203695323206558401630102578799900218436597230954437778111746830394958514693795703668608134688484361451977542361964879441862660907225537016230464396774501614633550453344389997701652088926779491939154277967969883770814387902879875613743223229395914926347385430187855896072954220734275197088587384423545384415702580062626846187660369433673963925368283292589562338733264483707085154679553150155966218540039768554264425242930122630759578034001784040206494331067331934081888223924875304452399021658433028042708859136403044098846651745078168587090692758339
-    N = 114074818133739504250047209185005541235104076834407454843024262517200619155182936436785962918603977053600646077595890908700137268868699889055060972806312126948522642693058329618120858621695314653366215387973749480530773400994063166095532724955861880985112526415669572580061355860224679573858183474455325088556643994673345465994162610420723170253345262031304174343327749668957998269532265104735742501097132399909676529715137398930849255495327761212026819673358330120772259339210848101393790624794141497382162858696771273350710124735773784422786465775396114824753700050260926501450377050949467981761553058188615697572753
-    r = 52590127432976083491238732503614965276544329818688634632767137973918045578992812985289716736906703169505549436697176020030544816837575642406120330044094101926756390272838108002439881182112360442668104629856258556842855755302886464339208354825118921549697616322247157559049488040135615532105368336491021854265473475528069047122826089655385379767218204046669380406790462989897640184187821995434927599001724468830237117370372883192568919508659630357441363324857869183828526986625221594440014568348246392587406204121296464310150086319496345975298783813760793880968818397424849582987543667279959113716063661758542453795636
-    k = 0
+rmuln = 59115915707374791858043439923167683347161887030487325917423499796492203695323206558401630102578799900218436597230954437778111746830394958514693795703668608134688484361451977542361964879441862660907225537016230464396774501614633550453344389997701652088926779491939154277967969883770814387902879875613743223229395914926347385430187855896072954220734275197088587384423545384415702580062626846187660369433673963925368283292589562338733264483707085154679553150155966218540039768554264425242930122630759578034001784040206494331067331934081888223924875304452399021658433028042708859136403044098846651745078168587090692758339
+N = 114074818133739504250047209185005541235104076834407454843024262517200619155182936436785962918603977053600646077595890908700137268868699889055060972806312126948522642693058329618120858621695314653366215387973749480530773400994063166095532724955861880985112526415669572580061355860224679573858183474455325088556643994673345465994162610420723170253345262031304174343327749668957998269532265104735742501097132399909676529715137398930849255495327761212026819673358330120772259339210848101393790624794141497382162858696771273350710124735773784422786465775396114824753700050260926501450377050949467981761553058188615697572753
+r = 52590127432976083491238732503614965276544329818688634632767137973918045578992812985289716736906703169505549436697176020030544816837575642406120330044094101926756390272838108002439881182112360442668104629856258556842855755302886464339208354825118921549697616322247157559049488040135615532105368336491021854265473475528069047122826089655385379767218204046669380406790462989897640184187821995434927599001724468830237117370372883192568919508659630357441363324857869183828526986625221594440014568348246392587406204121296464310150086319496345975298783813760793880968818397424849582987543667279959113716063661758542453795636
+k = 0
 
 
-    def extended_eucild(a, b):
-        p = []
-        if b == 0:
-            return a, 1, 0
-        while b != 0:
-            p.append((a, b))
-            a, b = b, a % b
-        x, y = 1, 0
-        while len(p) > 0:
-            a, b = p.pop()      
-            x, y = y, x - a / b * y
-        return x, y
-        
-        
-    if __name__ == "__main__":    
-        x, y = extended_eucild(r, N)        
-        t = (x * rmuln) % N
-        print ("%x" % t).decode('hex')
+def extended_eucild(a, b):
+    p = []
+    if b == 0:
+        return a, 1, 0
+    while b != 0:
+        p.append((a, b))
+        a, b = b, a % b
+    x, y = 1, 0
+    while len(p) > 0:
+        a, b = p.pop()      
+        x, y = y, x - a / b * y
+    return x, y
+    
+    
+if __name__ == "__main__":    
+    x, y = extended_eucild(r, N)        
+    t = (x * rmuln) % N
+    print ("%x" % t).decode('hex')
+```
 
 > SUCTF{Ju5t_hav3_fun_emmm}
 
 ## Misc
 ### Cycle
 
-    #!/usr/bin/env python
-    # -*- encoding: utf-8 -*-
-    
-    import flag
+```python
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 
-    def encryt(key, plain):
-        cipher = ""
-        for i in range(len(plain)):
-            cipher += chr(ord(key[i % len(key)]) ^ ord(plain[i]))
-        return cipher
+import flag
 
-    def getPlainText():
-        plain = ""
-        with open("plain.txt") as f:
-            while True:
-                line = f.readline()
-                if line:
-                    plain += line
-                else:
-                    break
-        return plain
+def encryt(key, plain):
+    cipher = ""
+    for i in range(len(plain)):
+        cipher += chr(ord(key[i % len(key)]) ^ ord(plain[i]))
+    return cipher
 
-    def main():
-        key = flag.flag
-        assert key.startswith("flag{")
-        assert key.endswith("}")
-        key = key[5:-1]
-        assert len(key) > 1
-        assert len(key) < 50
-        assert flag.languageOfPlain == "English"
-        plain = getPlainText()
-        cipher = encryt(key, plain)
-        with open("cipher.txt", "w") as f:
-            f.write(cipher.encode("base_64"))
+def getPlainText():
+    plain = ""
+    with open("plain.txt") as f:
+        while True:
+            line = f.readline()
+            if line:
+                plain += line
+            else:
+                break
+    return plain
 
-    if __name__ == "__main__":
-        main()
+def main():
+    key = flag.flag
+    assert key.startswith("flag{")
+    assert key.endswith("}")
+    key = key[5:-1]
+    assert len(key) > 1
+    assert len(key) < 50
+    assert flag.languageOfPlain == "English"
+    plain = getPlainText()
+    cipher = encryt(key, plain)
+    with open("cipher.txt", "w") as f:
+        f.write(cipher.encode("base_64"))
+
+if __name__ == "__main__":
+    main()
+```
 
 这道题是一个唯密文攻击。给定了通过xor加密后密文cipher.txt，同时给出了以下几个条件：
 
@@ -393,49 +415,51 @@ flag*r的值可以通过openssl rsautil解密获得。
 
 解题脚本如下
 
-    #!/usr/bin/env python
-    # -*- encoding: utf-8 -*- 
+```python
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*- 
 
-    import logging
-    import sys
+import logging
+import sys
 
-    engchar = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789. \x0d\x0a\"'!?(),:;$%-_=\xef\xbc\x8c"
+engchar = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789. \x0d\x0a\"'!?(),:;$%-_=\xef\xbc\x8c"
 
-    logger = logging.getLogger()
-    formatter = logging.Formatter('%(asctime)s %(levelname)-8s: %(message)s')
-    console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setFormatter(formatter) 
-    logger.addHandler(console_handler)
-    logger.setLevel(logging.WARNING)
+logger = logging.getLogger()
+formatter = logging.Formatter('%(asctime)s %(levelname)-8s: %(message)s')
+console_handler = logging.StreamHandler(sys.stdout)
+console_handler.setFormatter(formatter) 
+logger.addHandler(console_handler)
+logger.setLevel(logging.WARNING)
 
-    with open('cipher.txt') as f:
-        cipher = f.read().decode('base_64')
-        
-    def isengchar(s):
-        ret = True
-        for i in s:
-            if not i in engchar:
-                return i
-        return ret
-        
-    if __name__ == '__main__':
-        l = len(cipher)
-        for slength in range(2, 50):
-            logger.info('Fuzzing Length %d' % slength)
-            a = ['@' for i in range(50)]
-            for fuzzingchar in engchar:
-                for p in range(slength):
-                    pr = ""
-                    for i in range(l / slength):
-                        pr += chr(ord(cipher[i*slength+p]) ^ ord(fuzzingchar))
-                    ans = isengchar(pr)
-                    if ans == True:
-                        logger.info('confirm char %s vaild at No. %d' % (fuzzingchar, p))
-                        a[p] = fuzzingchar
-                    else:
-                        logger.debug('found char %s(%.2x) in ret for %s(%.2x) at No. %d' % (ans, ord(ans), fuzzingchar, ord(fuzzingchar), p))
-                # raw_input()
-            print slength, ''.join(a)
+with open('cipher.txt') as f:
+    cipher = f.read().decode('base_64')
+    
+def isengchar(s):
+    ret = True
+    for i in s:
+        if not i in engchar:
+            return i
+    return ret
+    
+if __name__ == '__main__':
+    l = len(cipher)
+    for slength in range(2, 50):
+        logger.info('Fuzzing Length %d' % slength)
+        a = ['@' for i in range(50)]
+        for fuzzingchar in engchar:
+            for p in range(slength):
+                pr = ""
+                for i in range(l / slength):
+                    pr += chr(ord(cipher[i*slength+p]) ^ ord(fuzzingchar))
+                ans = isengchar(pr)
+                if ans == True:
+                    logger.info('confirm char %s vaild at No. %d' % (fuzzingchar, p))
+                    a[p] = fuzzingchar
+                else:
+                    logger.debug('found char %s(%.2x) in ret for %s(%.2x) at No. %d' % (ans, ord(ans), fuzzingchar, ord(fuzzingchar), p))
+            # raw_input()
+        print slength, ''.join(a)
+```
 
 > flag{Something Just Like This}
 
@@ -514,201 +538,207 @@ b_k &= a_k + k
 #### 脚本
 写了一夜大概。。。
 
-    #!/usr/bin/env python
-    # -*- encoding: utf-8 -*-
+```python
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 
-    from pwn import *
-    from hashlib import sha256
-    import re
-    import math
+from pwn import *
+from hashlib import sha256
+import re
+import math
 
-    digits = re.compile(r'\d+')
-    wythoff_table_a = [ int(k*(1+math.sqrt(5.0))/2) for k in range(100000) ]
-    wythoff_table_b = [ k + wythoff_table_a[k] for k in range(100000) ]
-    wythoff_table = [wythoff_table_a, wythoff_table_b]
-    x = (1 + math.sqrt(5.0))/2.0;
+digits = re.compile(r'\d+')
+wythoff_table_a = [ int(k*(1+math.sqrt(5.0))/2) for k in range(100000) ]
+wythoff_table_b = [ k + wythoff_table_a[k] for k in range(100000) ]
+wythoff_table = [wythoff_table_a, wythoff_table_b]
+x = (1 + math.sqrt(5.0))/2.0;
 
-    def hashcollison(r, t):
-        raw = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        for i in raw:
-            for j in raw:
-                for k in raw:
-                    for l in raw:
-                        p = "%s%s%s%s%s" % (t, i, j, k, l)
-                        # print sha256(p).hexdigest()
-                        # print r
-                        if sha256(p).hexdigest().strip() == r.strip():
-                            return "%s%s%s%s" % (i, j, k, l)
-                            
-    def gottable(x):
-        ret = []
-        r = 0
-        for i in range(40):
-            ret.append(r)
-            r += x
-        return ret
+def hashcollison(r, t):
+    raw = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    for i in raw:
+        for j in raw:
+            for k in raw:
+                for l in raw:
+                    p = "%s%s%s%s%s" % (t, i, j, k, l)
+                    # print sha256(p).hexdigest()
+                    # print r
+                    if sha256(p).hexdigest().strip() == r.strip():
+                        return "%s%s%s%s" % (i, j, k, l)
+                        
+def gottable(x):
+    ret = []
+    r = 0
+    for i in range(40):
+        ret.append(r)
+        r += x
+    return ret
 
-    def swap(p, q):
-    p = p ^ q
-    q = q ^ p
-    p = p ^ q
-    return p, q
-        
-    if __name__ == '__main__':
-        con = remote('game.suctf.asuri.org', 10000)
-        con.recvuntil('sha256(')
-        r = con.recvline()
-        hash = r.split('==')[1].strip()
-        text = r[:12]
-        log.info("Collision Hash (%s+xxxx)==%s" % (text, hash))
-        con.sendline(hashcollison(hash, text))
-        log.info("Collision Done. Enter the game")
+def swap(p, q):
+p = p ^ q
+q = q ^ p
+p = p ^ q
+return p, q
+    
+if __name__ == '__main__':
+    con = remote('game.suctf.asuri.org', 10000)
+    con.recvuntil('sha256(')
+    r = con.recvline()
+    hash = r.split('==')[1].strip()
+    text = r[:12]
+    log.info("Collision Hash (%s+xxxx)==%s" % (text, hash))
+    con.sendline(hashcollison(hash, text))
+    log.info("Collision Done. Enter the game")
 
-        con.recvuntil('skip.')
-        # rnd = 0
-        log.info("Bash Game Start")
-        while True: # Bash Game
-            # rnd += 1
-            con.recvuntil("===========================================================================\n")
-            r = con.recv(1)
-            if r != "R":
+    con.recvuntil('skip.')
+    # rnd = 0
+    log.info("Bash Game Start")
+    while True: # Bash Game
+        # rnd += 1
+        con.recvuntil("===========================================================================\n")
+        r = con.recv(1)
+        if r != "R":
+            break
+        con.recvuntil('ound ')
+        rnd = con.recvline(keepends=False)
+        log.info("Round %s Start" % rnd)
+        p = con.recvline(keepends=False)
+        v = digits.findall(p)
+        stonecnt = int(v[0])
+        maxgot = int(v[2])
+        p = gottable(maxgot+1)
+        log.info("Round %s: %d Total, Got %d max" % (rnd, stonecnt, maxgot))
+
+        while True:
+            r = con.recvline()
+            stonecnt = int(digits.findall(r)[0])
+            # log.info("Round %s: %d Left" % (rnd, stonecnt))
+            con.recvline()
+            i = 0
+            while p[i] <= stonecnt:
+                i += 1;
+            ans = stonecnt - p[i-1]
+            
+            if ans == 0:
+                snt = 'GG'
+            else:
+                snt = str(ans)
+            con.sendline(snt)
+            r = con.recvline(keepends=False)
+            if snt == "GG":
+                c = digits.findall(r)[0]
+                log.info("Round %s GG. %s chances left." % (rnd, c))
                 break
-            con.recvuntil('ound ')
-            rnd = con.recvline(keepends=False)
-            log.info("Round %s Start" % rnd)
-            p = con.recvline(keepends=False)
-            v = digits.findall(p)
-            stonecnt = int(v[0])
-            maxgot = int(v[2])
-            p = gottable(maxgot+1)
-            log.info("Round %s: %d Total, Got %d max" % (rnd, stonecnt, maxgot))
-
-            while True:
-                r = con.recvline()
-                stonecnt = int(digits.findall(r)[0])
-                # log.info("Round %s: %d Left" % (rnd, stonecnt))
-                con.recvline()
-                i = 0
-                while p[i] <= stonecnt:
-                    i += 1;
-                ans = stonecnt - p[i-1]
-                
-                if ans == 0:
-                    snt = 'GG'
-                else:
-                    snt = str(ans)
-                con.sendline(snt)
-                r = con.recvline(keepends=False)
-                if snt == "GG":
-                    c = digits.findall(r)[0]
-                    log.info("Round %s GG. %s chances left." % (rnd, c))
-                    break
-                if r == "You win!":
-                    log.info("Round %s Win" % rnd)
-                    break
-        log.info("Wythoff Game Start")
-
-        while True: # Wythoff Game
-            con.recvuntil("===========================================================================\n")
-            r = con.recv(1)
-            if r != "R":
+            if r == "You win!":
+                log.info("Round %s Win" % rnd)
                 break
-            con.recvuntil('ound ')
-            rnd = con.recvline(keepends=False)
-            log.info("Round %s Start" % rnd)
-            while True:
-                r = con.recvline()
-                piles = [ int(i) for i in digits.findall(r) ]
-                # log.info("Round %s: %d %d" % (rnd, piles[0], piles[1]))
+    log.info("Wythoff Game Start")
 
-                if piles[0] <= piles[1]:
-                    varorder = [0, 1]
-                else:
-                    piles[0], piles[1] = swap(piles[0], piles[1])
-                    varorder = [1, 0]
-                # log.info("Round %s: varorder %d %d" % (rnd, varorder[0], varorder[1]))
-                con.recvline()
-                
-                snt = ""
-                k = piles[1] - piles[0]
-                if int(k * x) == piles[0]:
-                    snt = "GG"
-                else:
-                    for i in range(1, piles[0]+1):
-                        n = piles[0] - i
-                        m = piles[1] - i
+    while True: # Wythoff Game
+        con.recvuntil("===========================================================================\n")
+        r = con.recv(1)
+        if r != "R":
+            break
+        con.recvuntil('ound ')
+        rnd = con.recvline(keepends=False)
+        log.info("Round %s Start" % rnd)
+        while True:
+            r = con.recvline()
+            piles = [ int(i) for i in digits.findall(r) ]
+            # log.info("Round %s: %d %d" % (rnd, piles[0], piles[1]))
+
+            if piles[0] <= piles[1]:
+                varorder = [0, 1]
+            else:
+                piles[0], piles[1] = swap(piles[0], piles[1])
+                varorder = [1, 0]
+            # log.info("Round %s: varorder %d %d" % (rnd, varorder[0], varorder[1]))
+            con.recvline()
+            
+            snt = ""
+            k = piles[1] - piles[0]
+            if int(k * x) == piles[0]:
+                snt = "GG"
+            else:
+                for i in range(1, piles[0]+1):
+                    n = piles[0] - i
+                    m = piles[1] - i
+                    k = m - n
+                    if int(k*x) == n:
+                        snt = "%d 2" % i
+                if snt == "":
+                    for i in range(piles[1]):
+                        n = piles[0]
+                        m = i
+                        if n > m:
+                            n,m = swap(n,m)
                         k = m - n
                         if int(k*x) == n:
-                            snt = "%d 2" % i
-                    if snt == "":
-                        for i in range(piles[1]):
-                            n = piles[0]
-                            m = i
-                            if n > m:
-                                n,m = swap(n,m)
-                            k = m - n
-                            if int(k*x) == n:
-                                snt = "%d %d" % (piles[1] - i, varorder[1])
-                # log.info("Payload: %s" % snt)
-                con.sendline(snt)
-                r = con.recvline(keepends=False)
-                # log.info(r)
-                if snt == "GG":
-                    c = digits.findall(r)[0]
-                    log.info("Round %s GG. %s chances left." % (rnd, c))
-                    break
-                if r == "You win!":
-                    log.info("Round %s Win" % rnd)
-                    break
-        
-        log.info("Nimm Game Start")
-
-        while True: # Nimm Game
-            con.recvuntil("===========================================================================\n")
-            r = con.recv(1)
-            if r != "R":
+                            snt = "%d %d" % (piles[1] - i, varorder[1])
+            # log.info("Payload: %s" % snt)
+            con.sendline(snt)
+            r = con.recvline(keepends=False)
+            # log.info(r)
+            if snt == "GG":
+                c = digits.findall(r)[0]
+                log.info("Round %s GG. %s chances left." % (rnd, c))
                 break
-            con.recvuntil('ound ')
-            rnd = con.recvline(keepends=False)
-            log.info("Round %s Start" % rnd)
-            while True:
-                r = con.recvline()
-                piles = [ int(i) for i in digits.findall(r) ]
-                # log.info("Round %s: %d %d %d %d %d" % (rnd, piles[0], piles[1], piles[2], piles[3],piles[4]))
-                
-                xorret = reduce(lambda x,y: x ^ y, piles)
-                
-                snt = ""
-                if xorret == 0:
-                    snt = "GG"
-                else:
-                    for i in range(5):
-                        middle_xor = xorret ^ piles[i]
-                        needed = middle_xor ^ 0
-                        # log.info("piles[%d] = %d, needed is %d" % (i, piles[i], needed))
-                        if needed < piles[i]:
-                            snt = "%d %d" % (piles[i] - needed, i)
-                        
-                con.sendline(snt)
-                r = con.recvline(keepends=False)
-                if snt == "GG":
-                    c = digits.findall(r)[0]
-                    log.info("Round %s GG. %s chances left." % (rnd, c))
-                    break
-                if r == "You win!":
-                    log.info("Round %s Win" % rnd)
-                    break
-            if rnd == '20':
-                con.interactive()
+            if r == "You win!":
+                log.info("Round %s Win" % rnd)
+                break
+    
+    log.info("Nimm Game Start")
+
+    while True: # Nimm Game
+        con.recvuntil("===========================================================================\n")
+        r = con.recv(1)
+        if r != "R":
+            break
+        con.recvuntil('ound ')
+        rnd = con.recvline(keepends=False)
+        log.info("Round %s Start" % rnd)
+        while True:
+            r = con.recvline()
+            piles = [ int(i) for i in digits.findall(r) ]
+            # log.info("Round %s: %d %d %d %d %d" % (rnd, piles[0], piles[1], piles[2], piles[3],piles[4]))
             
+            xorret = reduce(lambda x,y: x ^ y, piles)
+            
+            snt = ""
+            if xorret == 0:
+                snt = "GG"
+            else:
+                for i in range(5):
+                    middle_xor = xorret ^ piles[i]
+                    needed = middle_xor ^ 0
+                    # log.info("piles[%d] = %d, needed is %d" % (i, piles[i], needed))
+                    if needed < piles[i]:
+                        snt = "%d %d" % (piles[i] - needed, i)
+                    
+            con.sendline(snt)
+            r = con.recvline(keepends=False)
+            if snt == "GG":
+                c = digits.findall(r)[0]
+                log.info("Round %s GG. %s chances left." % (rnd, c))
+                break
+            if r == "You win!":
+                log.info("Round %s Win" % rnd)
+                break
+        if rnd == '20':
+            con.interactive()
+```
+
 > SUCTF{gGGGGggGgGggGGggGGGggGgGgggGGGGGggggggGgGggggGg}
 
 ## Web
+
 求大佬讲解Getshell做法。
+
 ### Anonymous
+
 Hitcon 2017某题的一半
 
-    <?php
+```php
+<?php
 
     $MY = create_function("","die(`cat flag.php`);");
     $hash = bin2hex(openssl_random_pseudo_bytes(32));
@@ -721,39 +751,42 @@ Hitcon 2017某题的一半
         die();
     }
     show_source(__FILE__);
-    
+```
+
 创建了匿名函数$MY来显示flag。显然不能直接爆破$hash，但由于PHP Zend Engine实际上是通过一个特殊的函数名(\x00_lambda_*N*, *N*是当前进程的匿名函数编号)来标记匿名函数，所以调用这个函数就可以实现功能了。
 
 还有另外一点需要注意，为了使函数编号为0，我们需要大量给服务器发包，迫使Apache Fork一个新进程处理我们的请求：
 
-    #!/usr/bin/env python
-    # coding: UTF-8
-    # Author: orange@chroot.org
-    # Modified to adapt SUCTF 2018
+```python
+#!/usr/bin/env python
+# coding: UTF-8
+# Author: orange@chroot.org
+# Modified to adapt SUCTF 2018
 
-    import requests
-    import socket
-    import time
-    from multiprocessing.dummy import Pool as ThreadPool
-    try:
-        requests.packages.urllib3.disable_warnings()
-    except:
-        pass
+import requests
+import socket
+import time
+from multiprocessing.dummy import Pool as ThreadPool
+try:
+    requests.packages.urllib3.disable_warnings()
+except:
+    pass
 
-    def run(i):
-        while 1:
-            HOST = 'web.suctf.asuri.org'
-            PORT = 81
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.connect((HOST, PORT))
-            s.sendall('GET / HTTP/1.1\nHost: web.suctf.asuri.org\nConnection: Keep-Alive\n\n')
-            # s.close()
-            print 'ok'
-            time.sleep(0.5)
+def run(i):
+    while 1:
+        HOST = 'web.suctf.asuri.org'
+        PORT = 81
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((HOST, PORT))
+        s.sendall('GET / HTTP/1.1\nHost: web.suctf.asuri.org\nConnection: Keep-Alive\n\n')
+        # s.close()
+        print 'ok'
+        time.sleep(0.5)
 
-    i = 8
-    pool = ThreadPool( i )
-    result = pool.map_async( run, range(i) ).get(0xffff)
+i = 8
+pool = ThreadPool( i )
+result = pool.map_async( run, range(i) ).get(0xffff)
+```
 
 在这个脚本运行的同时提交payload即可。
 
