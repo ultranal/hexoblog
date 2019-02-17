@@ -21,6 +21,7 @@ install:
 - npm install hexo-renderer-pug --save
 - npm install hexo-renderer-scss --save
 - npm install hexo-generator-feed --save
+- npm install hexo-generator-sitemap --save
 script:
 - hexo clean
 - hexo generate
