@@ -7,7 +7,8 @@ categories:
 tags: 
   - git
   - travis
-  - submodule
 ---
 
 TL;DR：Git 子模块可以在一个 repo 内创建另一个 repo 的指针，解决了在一个 repo 中包含另一个 repo，同时还要与上游保持同步的需要。
+
+挖坑，待填。
