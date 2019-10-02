@@ -1,12 +1,14 @@
 language: node_js
 node_js: 11
 
-addons:
-  ssh_known_hosts: lpnal.me
+branches:
+  only:
+    - master # build master branch only
 
 cache:
   directories:
   - node_modules
+
 before_install:
 - npm install -g hexo-cli
 install:
@@ -21,9 +23,11 @@ install:
 script:
 - hexo clean
 - hexo generate
-before_deploy:
-- git config --global user.name "ultranal"
-- git config --global user.email "ultranal@gmail.com"
-- sed -i "s/github_token/${GITHUB_TOKEN}/g" ./_config.yml
 deploy:
-- hexo deploy
+  provider: pages
+  skip_cleanup: true
+  github_token: ${GITHUB_TOKEN}
+  keep_history: true
+  on:
+    branch: master
+  local-dir: public
