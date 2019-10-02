@@ -21,8 +21,9 @@ install:
 script:
 - hexo clean
 - hexo generate
-after_success:
+before_deploy:
 - git config --global user.name "ultranal"
 - git config --global user.email "ultranal@gmail.com"
 - sed -i "s/github_token/${GITHUB_TOKEN}/g" ./_config.yml
+deploy:
 - hexo deploy
