@@ -13,8 +13,6 @@ before_install:
 - npm install -g hexo-cli
 install:
 - npm install
-- npm install hexo-deployer-git --save
-- npm install hexo-deployer-rsync --save
 - npm install hexo-renderer-pug --save
 - npm install hexo-renderer-scss --save
 - npm install hexo-generator-feed --save
@@ -31,3 +29,5 @@ deploy:
   on:
     branch: master
   local-dir: public
+  repo: ultranal/ultranal.github.io
+  target_branch: master
