@@ -13,7 +13,7 @@ timezone: Asia/Shanghai
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://blog.lpnal.top
+url: https://blog.lpnal.me
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -95,10 +95,6 @@ sitemap:
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  -  type: rsync
-     host: lpnal.top
-     user: hexo 
-     root: /var/www/hexo
   -  type: git
      repo: https://github_token@github.com/ultranal/ultranal.github.io.git 
      branch: master
