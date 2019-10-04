@@ -7,11 +7,11 @@ comments: false
 
 # About me
 
-A member of csrg@nfpc.edu.cn.
+a member of csrg@nfpc.edu.cn.
 
-A member of forestwo1f.
+a member of forestwo1f.
 
-A developer.
+a developer.
 
 # Contact Me
 
