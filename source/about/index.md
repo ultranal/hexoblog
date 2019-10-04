@@ -15,6 +15,6 @@ a developer.
 
 # Contact Me
 
-<i class="fab fa-envelope"></i> <ultranal@gmail.com>
-<i class="fab fa-weibo"></i> [@ultranal](https://weibo.com/u/2311240132)
-<i class="fab fa-github"></i> [@ultranal](https://github.com/ultranal)
+<i class="fa fa-envelope"></i> <ultranal@gmail.com>
+<i class="fa fa-weibo"></i> [@ultranal](https://weibo.com/u/2311240132)
+<i class="fa fa-github"></i> [@ultranal](https://github.com/ultranal)
